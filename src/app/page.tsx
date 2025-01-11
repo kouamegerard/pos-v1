@@ -2,6 +2,7 @@ import {ProductItems} from "@/components/items/ProductItems";
 import { HeaderMenu } from "@/components/menu/HeaderMenu";
 import { prisma } from "@/db";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 async function addOrder () {
   "use server"
@@ -12,6 +13,20 @@ async function addOrder () {
 
 function getAllOrders() {
   return prisma.command.findMany();
+}
+async function toggleIsReady(id: string, complete: boolean) {
+  "use server"
+
+  await prisma.command.update({ 
+    where: {id}, 
+    data: {
+      complete,
+      status: "COOKED"
+    }
+  })
+
+  redirect("/")
+  
 }
 
 export default async function Home() {
